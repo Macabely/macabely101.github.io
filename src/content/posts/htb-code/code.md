@@ -30,7 +30,7 @@ I start analyzing javascript files to search for sensitive data or endpoints. I 
 
 ***
 
-## II Exploit
+# II Analyze
 
 Start with a simple code `print(os.name)`, realized that there were restricted words (os, sys, platform, import,....etc) that i don't have access to, indicating some type of WAF exist in place.
 
@@ -59,7 +59,7 @@ print(object.__subclasses__())
 
 ***
 
-## III Reverse Shell
+# III Exploit
 
 As you can see we got bunch of classes, we only focus on ones with **command execution**. There are several ones (`socket.socket`, `os._wrap_close`, `subprocess.Popen`) that may help us to get a **reverse shell**. Let's use `subprocess.Popen`, since it's the easiest way to do it. But the problem is to use this class we need to know it's index. And to know it's index, we don't have a way other than brute forcing it.
 
@@ -67,6 +67,9 @@ As you can see we got bunch of classes, we only focus on ones with **command exe
 
 By increase the number from **1** until we find the intended class that we want, we gonna use that number as the intended index in our payload after. 
 *You can brute force this easily with burp intruder*. And you will successfully find the index.
+
+# IV Reverse Shell
+
 
 Now we can use `subprocess.Popen` to execute our reverse shell.
 
@@ -119,7 +122,7 @@ We now have username and password that we can use to login at the SSH server.
 
 ***
 
-## IV Root
+# V Root
 
 By exec this command in the terminal `ssh martin@10.10.11.62`.
 Noticed you successfully logged in, but unfortunately we don't have access to the root directory.

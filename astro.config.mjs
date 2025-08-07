@@ -26,11 +26,7 @@ import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-cop
 
 // https://astro.build/config
 export default defineConfig({
-<<<<<<< HEAD
 	site: "https://macabely.github.io",
-=======
-	site: "https://fuwari.vercel.app/",
->>>>>>> f22e93c6871d4de45d844cc85abaf647f5d1190e
 	base: "/",
 	trailingSlash: "always",
 	integrations: [
@@ -63,11 +59,7 @@ export default defineConfig({
 			themes: [expressiveCodeConfig.theme, expressiveCodeConfig.theme],
 			plugins: [
 				pluginCollapsibleSections(),
-<<<<<<< HEAD
 				//pluginLineNumbers(),
-=======
-				pluginLineNumbers(),
->>>>>>> f22e93c6871d4de45d844cc85abaf647f5d1190e
 				pluginLanguageBadge(),
 				pluginCustomCopyButton()
 			],
@@ -75,11 +67,7 @@ export default defineConfig({
 				wrap: true,
 				overridesByLang: {
 					'shellsession': {
-<<<<<<< HEAD
 						showLineNumbers: true,
-=======
-						showLineNumbers: false,
->>>>>>> f22e93c6871d4de45d844cc85abaf647f5d1190e
 					},
 				},
 			},
@@ -104,13 +92,7 @@ export default defineConfig({
 				textMarkers: {
 					delHue: 0,
 					insHue: 180,
-<<<<<<< HEAD
-					markHue: 250,
-					markBackground: '#0d47a11a',
-					markBorderColor: '#2196f3'
-=======
 					markHue: 250
->>>>>>> f22e93c6871d4de45d844cc85abaf647f5d1190e
 				}
 			},
 			frames: {
