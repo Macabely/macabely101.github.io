@@ -12,7 +12,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "Blog",
 	lang: "en", // Language code, e.g. 'en', 'zh-CN', 'ja', etc.
 	themeColor: {
-		hue: 70, // Default hue for the theme color, from 0 to 360. e.g. red: 0, teal: 200, cyan: 250, pink: 345
+		hue: 200, // Default hue for the theme color, from 0 to 360. e.g. red: 0, teal: 200, cyan: 250, pink: 345
 		fixed: true, // Hide the theme color picker for visitors
 	},
 	banner: {
@@ -58,7 +58,7 @@ export const profileConfig: ProfileConfig = {
 		{
 			name: "LinkedIn",
 			icon: "fa6-brands:linkedin",
-			url: "https:www.linkedin.com/in/ali-hassan-02a479219",
+			url: "https://www.linkedin.com/in/ali-hassan-02a479219",
 		},
 		{
 			name: "GitHub",
